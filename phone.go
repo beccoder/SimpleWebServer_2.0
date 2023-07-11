@@ -8,9 +8,9 @@ import (
 )
 
 type Phone struct {
-	ID          int    `json:"id"`
+	ID          int    `json:"phone_id"`
 	UserID      int    `json:"user_id"`
-	PhoneNumber string `json:"phone_number"`
+	PhoneNumber string `json:"phone"`
 	Description string `json:"description"`
 	IsFax       bool   `json:"is_fax"`
 }

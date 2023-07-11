@@ -110,7 +110,7 @@ The application uses a SQLite database to store user and phone data. The databas
 
 ```json
 {
-  "phone_number": "1234567890",
+  "phone": "1234567890",
   "description": "Mobile",
   "is_fax": false
 }
@@ -124,8 +124,8 @@ The application uses a SQLite database to store user and phone data. The databas
 
 ```json
 {
-  "id": 1,
-  "phone_number": "9999999999",
+  "phone_id": 1,
+  "phone": "9999999999",
   "description": "Home",
   "is_fax": false
 }
