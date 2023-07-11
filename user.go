@@ -10,15 +10,30 @@ import (
 )
 
 type User struct {
-	ID       int    `json:"id"`
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	Age      int    `json:"age"`
+	ID       int    `json:"id" form:"id"`
+	Login    string `json:"login" form:"login"`
+	Password string `json:"password" form:"password"`
+	Name     string `json:"name" form:"name"`
+	Age      int    `json:"age" form:"age"`
 }
 
 func RegisterHandler(c *gin.Context) {
+	// Our struct can be assigned to form data as well.
+	// Getting data by binding is the best practise, but we can use PostForm also
+
 	var newUser User
+	// Apply PostForm method
+
+	// newUser.Login = c.PostForm("login")
+	// newUser.Password = c.PostForm("password")
+	// newUser.Name = c.PostForm("name")
+	// age, err := strconv.Atoi(c.PostForm("age"))
+	// if err != nil {
+	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	// 	return
+	// }
+	// newUser.Age = age
+
 	if err := c.ShouldBind(&newUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -35,9 +50,19 @@ func RegisterHandler(c *gin.Context) {
 		return
 	}
 
+	in, err := CheckLoginExistance(db, newUser.Login)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+		return
+	}
+	if in {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User with this login already exists"})
+		return
+	}
+
 	_, err = InsertUser(db, newUser.Login, string(hashedPassword), newUser.Name, strconv.Itoa(newUser.Age))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to insert user"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "User registered successfully"})

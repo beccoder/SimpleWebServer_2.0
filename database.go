@@ -52,7 +52,7 @@ func CreatePhoneTable(db *sql.DB) error {
 		CREATE TABLE IF NOT EXISTS phones (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL,
-			phone TEXT NOT NULL,
+			phone VARCHAR(12) NOT NULL,
 			description TEXT,
 			is_fax INTEGER NOT NULL,
 			FOREIGN KEY (user_id) REFERENCES users (id)
@@ -164,4 +164,11 @@ func DeletePhoneData(db *sql.DB, phoneID int) error {
 		return err
 	}
 	return nil
+}
+
+func CheckLoginExistance(db *sql.DB, login string) (bool, error) {
+	var count int
+	row := db.QueryRow("SELECT COUNT(*) FROM users WHERE login = ?", login)
+	err := row.Scan(&count)
+	return count > 0, err
 }

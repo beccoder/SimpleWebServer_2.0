@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -26,6 +25,11 @@ func AddPhoneHandler(c *gin.Context) {
 	}
 	if newPhoneData.PhoneNumber == "" || newPhoneData.Description == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
+		return
+	}
+
+	if len(newPhoneData.PhoneNumber) > 12 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Phone number should be less than 12"})
 		return
 	}
 
@@ -70,9 +74,14 @@ func UpdatePhoneHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	fmt.Print(newPhoneData)
+
 	if newPhoneData.ID == 0 || newPhoneData.PhoneNumber == "" || newPhoneData.Description == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
+		return
+	}
+
+	if len(newPhoneData.PhoneNumber) > 12 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Phone number should be less than 12"})
 		return
 	}
 
